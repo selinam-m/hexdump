@@ -1,0 +1,11 @@
+#compiled binaries and object files
+hexdump
+*.o
+*.out
+
+#Editor/ OS Junk
+.vscode/
+.DS_Store
+
+# Generated Test files
+test_*.txt
