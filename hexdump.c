@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 int main (int argc, char *argv[]) {
     if (argc != 2) {
@@ -23,6 +24,20 @@ int main (int argc, char *argv[]) {
         for (size_t i = 0; i < bytes_read; i++) {
             printf("%02x ", buffer[i]);
         }
+
+        printf("|");
+
+        for (size_t j = 0; j < bytes_read; j++) {
+            unsigned char c = buffer[j];
+            if (isprint(c)){
+                printf("%c", c);
+            }
+            else{
+                printf(".");
+            }
+        }
+
+        printf("|");
         printf("\n");
 
         offset += bytes_read;
