@@ -25,6 +25,10 @@ int main (int argc, char *argv[]) {
             printf("%02x ", buffer[i]);
         }
 
+        for (size_t k = bytes_read; k < 16; k++) {
+            printf("   ");
+        }
+
         printf("|");
 
         for (size_t j = 0; j < bytes_read; j++) {
