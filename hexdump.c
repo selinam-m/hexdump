@@ -4,24 +4,39 @@
 #include <errno.h>
 #include <string.h>
 
+void hexdump(FILE *fp);
+
 int main (int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
+    if (argc == 1) {
+        hexdump(stdin);
+    }
+    else if (argc == 2) {
+        FILE *fp = fopen(argv[1], "rb");
+        if (fp == NULL) {
+            fprintf(stderr, "%s: cannot open '%s': %s\n", argv[0], argv[1], strerror(errno));
+            return 1;
+        }
+
+        hexdump(fp);
+
+        fclose(fp);
+        
+    }
+    else {
+        fprintf(stderr, "Usage: %s [file]\n ", argv[0]);
         return 1;
     }
 
-    FILE *fp = fopen(argv[1], "rb");
-    if (fp == NULL) {
-        fprintf(stderr, "%s: cannot open '%s': %s\n", argv[0], argv[1], strerror(errno));
-        return 1;
-    }
+    return 0;
 
+}
+
+void hexdump (FILE *fp) {
     unsigned char buffer[16];
     size_t bytes_read;
     size_t offset = 0;
 
     while ((bytes_read = fread(buffer, 1, 16, fp)) > 0) {
-
         printf("%08zx  ", offset);
         for (size_t i = 0; i < bytes_read; i++) {
             printf("%02x ", buffer[i]);
@@ -48,16 +63,9 @@ int main (int argc, char *argv[]) {
 
         offset += bytes_read;
     }
-
     //checking for error while reading into buffer.
     if (ferror(fp)) {
         perror("Error reading file");
-        fclose(fp);
-        return 1;
     }
-
-    fclose(fp);
-    return 0;
-
 
 }
